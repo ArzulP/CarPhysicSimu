@@ -9,9 +9,18 @@ public class CarController : MonoBehaviour
     private float maxMotorTorque = 4000; // maximum torque the motor can apply to wheel
     private float minMotorTorque = 20; // minimum torque applied when no pedal are pressed but motor is still rotating
     private float maxBreakTorque = 10000;
-    private float minBreakTorque = 1000;
+    private float minMotorBreak = -300;
 
     private float maxSteeringAngle = 30; // maximum steer angle the wheel can have
+
+    private Rigidbody leftGround;
+    private Rigidbody rightGround;
+    private Rigidbody rb;
+
+    public void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     public void FixedUpdate()
     {
@@ -19,35 +28,30 @@ public class CarController : MonoBehaviour
         float decelerate = maxBreakTorque * Input.GetAxis("Decelerate");
         float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
 
-        if (accelerate == 0 && decelerate == 0) // a revoir
-            decelerate = minBreakTorque;
+        float velocity = Mathf.Sqrt(rb.velocity.x * rb.velocity.x + rb.velocity.z * rb.velocity.z); // current velocity of car
 
-        if (decelerate == 0 && accelerate < minMotorTorque)
+        if (accelerate == 0 && decelerate == 0 && velocity>1.5)
+            accelerate = minMotorBreak;
+        else if (decelerate == 0 && accelerate < minMotorTorque)
             accelerate = minMotorTorque;
-
         
-
-        print("accelerate : " + accelerate);
-        print("decelerate : " + decelerate);
 
         foreach (AxleInfo axleInfo in axleInfos)
         {
             RaycastHit hit;
-            float leftGroundDrag = 0;
-            float rightGroundDrag = 0;
 
 
             if(Physics.Raycast(axleInfo.leftWheel.transform.position, Vector3.down, out hit, 2.0f))
                 {
-                leftGroundDrag = hit.transform.GetComponent<Rigidbody>().drag;
+                leftGround = hit.transform.GetComponent<Rigidbody>();
                 }
 
             if (Physics.Raycast(axleInfo.rightWheel.transform.position, Vector3.down, out hit, 2.0f))
                 {
-                rightGroundDrag = hit.transform.GetComponent<Rigidbody>().drag;
+                rightGround = hit.transform.GetComponent<Rigidbody>();
                 }
-            setFrictions(axleInfo.leftWheel, leftGroundDrag);
-            setFrictions(axleInfo.rightWheel, rightGroundDrag);
+            setFrictions(axleInfo.leftWheel, leftGround);
+            setFrictions(axleInfo.rightWheel, rightGround);
 
             if (axleInfo.steering)
             {
@@ -64,14 +68,14 @@ public class CarController : MonoBehaviour
         }
     }
 
-    private void setFrictions(WheelCollider collider, float friction)
+    private void setFrictions(WheelCollider collider, Rigidbody groundBody)
     {
         WheelFrictionCurve forwardFrictionCurve = collider.forwardFriction;
-        forwardFrictionCurve.stiffness = friction;
+        forwardFrictionCurve.stiffness = groundBody.drag;
         collider.forwardFriction = forwardFrictionCurve;
 
         WheelFrictionCurve SideFrictionCurve = collider.sidewaysFriction;
-        SideFrictionCurve.stiffness = friction;
+        SideFrictionCurve.stiffness = groundBody.angularDrag;
         collider.sidewaysFriction = SideFrictionCurve;
     }
 }
@@ -81,6 +85,6 @@ public class AxleInfo
 {
     public WheelCollider leftWheel;
     public WheelCollider rightWheel;
-    public bool motor; // is this wheel attached to motor?
-    public bool steering; // does this wheel apply steer angle?
+    public bool motor;
+    public bool steering;
 }
