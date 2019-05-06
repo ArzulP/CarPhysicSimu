@@ -28,18 +28,18 @@ Sont gérés par la simulation:
 * Freinage du véhicule
 * Marche arrière du véhicule
 * Gestion de la répartition du poids
-*  Déplacement des roues en fonction de la répartition
-*  Rotation du véhicule en fonction de la répartition
-*  Impacte global sur le comportement du véhicule selon la répartition
+* Déplacement des roues en fonction de la répartition
+  * Rotation du véhicule en fonction de la répartition
+  * Impacte global sur le comportement du véhicule selon la répartition
 * Système de dérapage
-*  Dérapage lorsque trop grande force appliquée
-*  Différent type de terrain aux frottements différents
-*   Routes, deux petites routes rectilignes
-*   Givre, situé sur le côté de la route
-*   Terre, représenté par un cadrillage orange/vert
-*   Roche, situé au bout de la piste
+  * Dérapage lorsque trop grande force appliquée
+  * Différent type de terrain aux frottements différents
+    * Routes, deux petites routes rectilignes
+    * Givre, situé sur le côté de la route
+    * Terre, représenté par un cadrillage orange/vert
+    * Roche, situé au bout de la piste
 * Gestion des particules
-*  Activation des particules de fumée lors de freinage
+  * Activation des particules de fumée lors de freinage
 * Repositionnement du véhicule par pression de touche si besoin
 * Caméra simple suivant le véhicule
 
