@@ -13,7 +13,7 @@ public class CarController : MonoBehaviour
     private float minMotorTorque = 20; // minimum torque applied when no pedal are pressed but motor is still rotating
     private float maxBreakTorque = 10000; // maximum break torque applied when breaking
     private float minMotorBreak = -300; // minimum motor torque applied when no acceleration is applied and the car is moving faster than the motor therefore letting the motor dictacte wheel rotation
-    private float maxReverseTorque = -1000; // maximum torque applied when going in reverse
+    private float maxReverseTorque = -4000; // maximum torque applied when going in reverse
 
     private float maxSteeringAngle = 30; // maximum steer angle the wheel can have
 
@@ -97,9 +97,9 @@ public class CarController : MonoBehaviour
             {
                 axleInfo.leftWheel.motorTorque = accelerate;
                 axleInfo.rightWheel.motorTorque = accelerate;
-                axleInfo.leftWheel.brakeTorque = decelerate;
-                axleInfo.rightWheel.brakeTorque = decelerate;
             }
+            axleInfo.leftWheel.brakeTorque = decelerate;
+            axleInfo.rightWheel.brakeTorque = decelerate;
         }
     }
 
